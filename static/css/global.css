@@ -9,11 +9,24 @@ body {
 header {
     padding: 20px;
     text-align: center;
-    border-bottom: 2px solid #333;
 }
 
 main {
     max-width: 800px;
     margin: 40px auto;
     padding: 20px;
+}
+
+.flash-messages {
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.flash-messages .error {
+    color: #dc3545;
+}
+
+.flash-messages .success {
+    color: #28a745;
 }

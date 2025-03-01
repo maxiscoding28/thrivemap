@@ -8,30 +8,22 @@
 
 {% block content %}
     <section class="home">
-        <h2>Your Life Domains</h2>
-
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <p class="{{ category }}">{{ message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+        <h2>Life Domains</h2>
 
         <div class="domain-grid">
             {% for domain in domains %}
-                <div class="domain-tile">
+                <div class="domain-tile" onclick="window.location.href='/domain/{{ domain.domain_id }}'">
                     <span>📌</span>
                     <h3>{{ domain.domain_name }}</h3>
-                    <button class="edit-btn" onclick="openEditModal({{ domain.domain_id }}, '{{ domain.domain_name }}')">✏️ Edit</button>
-                    <button class="delete-btn" onclick="confirmDelete({{ domain.domain_id }})">🗑️ Delete</button>
+                    <div class="domain-actions">
+                        <button class="edit-btn" onclick="openEditModal(event, {{ domain.domain_id }}, '{{ domain.domain_name }}')">✏️</button>
+                        <button class="delete-btn" onclick="confirmDelete(event, {{ domain.domain_id }})">🗑️</button>
+                    </div>
                 </div>
             {% endfor %}
         </div>
 
-        <button id="add-domain-btn">➕ Add Domain</button>
+        <button id="add-domain-btn" class="add-btn">➕ Add Domain</button>
 
         <!-- Add Domain Modal -->
         <div id="add-domain-modal" class="modal">

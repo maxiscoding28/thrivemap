@@ -2,6 +2,9 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 import mysql.connector
+from domain import domain_bp
+from notes import notes_bp  # Import notes blueprint
+from goals import goals_bp  # Import goals blueprint
 
 # Load environment variables
 load_dotenv()
@@ -18,9 +21,10 @@ def get_db_connection():
     }
     return mysql.connector.connect(**db_config)
 
-# Import and register the blueprint
-from domain import domain_bp
+# Import and register the blueprints
 app.register_blueprint(domain_bp)
+app.register_blueprint(notes_bp)
+app.register_blueprint(goals_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)

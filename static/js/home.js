@@ -13,7 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (addBtn && addModal) {
-        addBtn.addEventListener("click", () => {
+        addBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
             console.log("Opening Add Domain modal...");
             addModal.style.display = "flex";
         });
@@ -21,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Close modals when clicking the close button
     document.querySelectorAll(".close").forEach(button => {
-        button.addEventListener("click", function () {
+        button.addEventListener("click", function (event) {
+            event.stopPropagation();
             console.log("Closing modal...");
             this.closest(".modal").style.display = "none";
         });
@@ -37,12 +39,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Open Edit Domain Modal
-function openEditModal(id, name) {
+function openEditModal(event, id, name) {
+    event.stopPropagation();
     console.log(`Opening edit modal for domain ID: ${id}, Name: ${name}`);
     const editModal = document.getElementById("edit-modal");
     if (editModal) {
         document.getElementById("edit-domain-name").value = name;
-        document.getElementById("edit-form").action = `/edit_domain/${id}`;  // 👈 No `/domain/` prefix now
+        document.getElementById("edit-form").action = `/edit_domain/${id}`;
         editModal.style.display = "flex";
     } else {
         console.error("Edit modal (#edit-modal) not found!");
@@ -50,11 +53,12 @@ function openEditModal(id, name) {
 }
 
 // Open Delete Confirmation Modal
-function confirmDelete(id) {
+function confirmDelete(event, id) {
+    event.stopPropagation();
     console.log(`Opening delete confirmation for domain ID: ${id}`);
     const deleteModal = document.getElementById("delete-modal");
     if (deleteModal) {
-        document.getElementById("delete-form").action = `/delete_domain/${id}`;  // 👈 Removed `/domain/` prefix
+        document.getElementById("delete-form").action = `/delete_domain/${id}`;
         deleteModal.style.display = "flex";
     } else {
         console.error("Delete modal (#delete-modal) not found!");
