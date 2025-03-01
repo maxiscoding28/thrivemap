@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Thrivemap{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+    <section class="home">
+        <h2>Your Life Domains</h2>
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="domain-grid">
+            {% for domain in domains %}
+                <div class="domain-tile">
+                    <span>📌</span>
+                    <h3>{{ domain.domain_name }}</h3>
+                    <button class="edit-btn" onclick="openEditModal({{ domain.domain_id }}, '{{ domain.domain_name }}')">✏️ Edit</button>
+                    <button class="delete-btn" onclick="confirmDelete({{ domain.domain_id }})">🗑️ Delete</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button id="add-domain-btn">➕ Add Domain</button>
+
+        <!-- Add Domain Modal -->
+        <div id="add-domain-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddModal()">&times;</span>
+                <h3>Add a New Domain</h3>
+                <form action="{{ url_for('domain.add_domain') }}" method="post">
+                    <input type="text" name="domain_name" placeholder="Domain Name" required>
+                    <button type="submit">✅ Add</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Domain Modal -->
+        <div id="edit-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h3>Edit Domain</h3>
+                <form id="edit-form" action="#" method="post">
+                    <input type="text" id="edit-domain-name" name="domain_name" required>
+                    <button type="submit">✅ Save</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeleteModal()">&times;</span>
+                <h3>Are you sure you want to delete this domain?</h3>
+                <form id="delete-form" action="#" method="post">
+                    <button type="submit">🗑️ Yes, Delete</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

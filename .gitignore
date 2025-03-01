@@ -1,0 +1,39 @@
+# Virtual environment
+venv/
+env/
+
+# Byte-compiled / cached
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local environment settings
+.env
+*.env
+
+# Flask logs and cache
+instance/
+*.log
+
+# Database files
+db/*.sqlite3
+db/__pycache__/
+db/schema.sql~
+
+# MySQL dumps (if used for local testing)
+*.sql
+*.dump
+
+# Static assets (optional: if generated dynamically)
+static/uploads/
+
+# Node modules (if using JS tools like npm)
+node_modules/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+notes.txt

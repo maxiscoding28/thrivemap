@@ -1,0 +1,1 @@
+console.log("Thrivemap global scripts loaded.");
