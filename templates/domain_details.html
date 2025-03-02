@@ -4,70 +4,51 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/domain_details.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 {% endblock %}
 
 {% block content %}
     <section class="domain-details">
-        <h2>Domain Details</h2>
-        <div class="domain-info">
-            <h3>{{ domain.domain_name }}</h3>
-            <!-- Add more domain details here if needed -->
+        <h2>{{ domain.domain_name }}</h2>
+        
+        <div class="domain-info" style="text-align: left;">
+            <md id="domain-description">{{ domain.description|safe }}</md>
+            <form id="edit-form" action="{{ url_for('domain.update_description', domain_id=domain.domain_id) }}" method="post" style="display: none;">
+                <input type="hidden" name="domain_name" value="{{ domain.domain_name }}">
+                <textarea id="description" name="description">{{ domain.description }}</textarea>
+                <button type="submit">Update Description</button>
+            </form>
+            <button id="edit-button" onclick="toggleEdit()">Edit</button>
         </div>
+        <button onclick="window.location.href=''">View Notes & Goals</button>
+
+    </section>
+    <section class="navigation-buttons">
         <button onclick="window.location.href='{{ url_for("domain.home") }}'">Back to Home</button>
 
-        <div class="columns">
-            <div class="column">
-                <h3>Notes</h3>
-                <form action="{{ url_for('domain.add_note', domain_id=domain.domain_id) }}" method="post">
-                    <textarea name="note_text" placeholder="Add a note" required></textarea>
-                    <button type="submit">Add Note</button>
-                </form>
-                <div class="grid">
-                    {% for note in notes %}
-                        <div class="tile">
-                            {{ note.text }}
-                            <div class="note-actions">
-                                <button class="edit-btn" onclick="openEditNoteModal(event, {{ note.note_id }}, '{{ note.text }}')">✏️</button>
-                                <button class="delete-btn" onclick="confirmDeleteNote(event, {{ note.note_id }})">🗑️</button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="column">
-                <h3>Goals</h3>
-                <form action="{{ url_for('domain.add_goal', domain_id=domain.domain_id) }}" method="post">
-                    <textarea name="goal_text" placeholder="Add a goal" required></textarea>
-                    <button type="submit">Add Goal</button>
-                </form>
-                <div class="grid">
-                    {% for goal in goals %}
-                        <div class="tile {% if goal.completed %}completed{% endif %}">
-                            <input type="checkbox" {% if goal.completed %}checked{% endif %} onclick="toggleGoalCompletion(event, {{ goal.goal_id }}, {{ goal.completed }})">
-                            {{ goal.text }}
-                            <div class="goal-actions">
-                                <button class="edit-btn" onclick="openEditGoalModal(event, {{ goal.goal_id }}, '{{ goal.text }}')">✏️</button>
-                                <button class="delete-btn" onclick="confirmDeleteGoal(event, {{ goal.goal_id }})">🗑️</button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Confirmation Modal -->
-        <div id="confirmation-modal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeConfirmationModal()">&times;</span>
-                <h3>Are you sure you want to mark this goal as completed?</h3>
-                <button id="confirm-btn" onclick="confirmCompletion()">Yes</button>
-                <button onclick="closeConfirmationModal()">No</button>
-            </div>
-        </div>
     </section>
 {% endblock %}
 
 {% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MarketingPipeline/Markdown-Tag/markdown-tag.js"></script>
+    <script>
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("description")
+        });
+
+        function toggleEdit() {
+            var editForm = document.getElementById("edit-form");
+            var editButton = document.getElementById("edit-button");
+
+            if (editForm.style.display === "none") {
+                editForm.style.display = "block";
+                editButton.textContent = "Cancel";
+            } else {
+                editForm.style.display = "none";
+                editButton.textContent = "Edit";
+            }
+        }
+    </script>
     <script src="{{ url_for('static', filename='js/domain_details.js') }}"></script>
 {% endblock %}

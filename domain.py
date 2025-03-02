@@ -31,6 +31,7 @@ def add_domain():
         return redirect(url_for("domain.home"))
 
     domain_name = request.form.get("domain_name").strip()
+    description = request.form.get("description").strip()
 
     if not domain_name:
         flash("Domain name cannot be empty!", "error")
@@ -47,7 +48,7 @@ def add_domain():
         return redirect(url_for("domain.home"))
 
     try:
-        cursor.execute("INSERT INTO domains (domain_name) VALUES (%s)", (domain_name,))
+        cursor.execute("INSERT INTO domains (domain_name, description) VALUES (%s, %s)", (domain_name, description))
         conn.commit()
         flash("Domain added successfully!", "success")
     except mysql.connector.Error as err:
@@ -82,6 +83,7 @@ def domain_details(domain_id):
 @domain_bp.route('/edit_domain/<int:domain_id>', methods=['POST'])
 def edit_domain(domain_id):
     new_name = request.form.get("domain_name").strip()
+    description = request.form.get("description").strip()
 
     if not new_name:
         flash("Domain name cannot be empty!", "error")
@@ -99,7 +101,7 @@ def edit_domain(domain_id):
         return redirect(url_for("domain.home"))
 
     try:
-        cursor.execute("UPDATE domains SET domain_name = %s WHERE domain_id = %s", (new_name, domain_id))
+        cursor.execute("UPDATE domains SET domain_name = %s, description = %s WHERE domain_id = %s", (new_name, description, domain_id))
         conn.commit()
         flash("Domain updated successfully!", "success")
     except mysql.connector.Error as err:
@@ -108,7 +110,27 @@ def edit_domain(domain_id):
         cursor.close()
         conn.close()
 
-    return redirect(url_for("domain.home"))
+    return redirect(url_for("domain.domain_details", domain_id=domain_id))
+
+# Update domain description
+@domain_bp.route('/update_description/<int:domain_id>', methods=['POST'])
+def update_description(domain_id):
+    description = request.form.get("description").strip()
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("UPDATE domains SET description = %s WHERE domain_id = %s", (description, domain_id))
+        conn.commit()
+        flash("Description updated successfully!", "success")
+    except mysql.connector.Error as err:
+        flash(f"Error: {err}", "error")
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for("domain.domain_details", domain_id=domain_id))
 
 # Delete a domain
 @domain_bp.route('/delete_domain/<int:domain_id>', methods=['POST'])
